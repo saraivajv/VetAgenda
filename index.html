@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="favicon.png"
+    />
+  <title>VetAgenda - Acesso</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset Básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: #0f172a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .login-container {
+      background-color: #ffffff;
+      padding: 2.5rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 2rem;
+    }
+
+    .brand svg {
+      width: 32px;
+      height: 32px;
+      fill: #0ea5e9;
+    }
+
+    .brand h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0ea5e9;
+    }
+
+    .brand h1 span {
+      font-weight: 400;
+      color: #0f172a;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus {
+      border-color: #0ea5e9;
+    }
+
+    .form-group input.error {
+      border-color: #ef4444;
+    }
+
+    .error-msg {
+      color: #ef4444;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #0ea5e9;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      margin-top: 0.5rem;
+    }
+
+    .btn-primary:hover {
+      background-color: #0284c7;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C8.69 2 6 4.69 6 8C6 11.31 8.69 14 12 14C15.31 14 18 11.31 18 8C18 4.69 15.31 2 12 2ZM12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4C14.21 4 16 5.79 16 8C16 10.21 14.21 12 12 12ZM19 14.41C17.3 15.58 15.22 16.25 13 16.25C10.78 16.25 8.7 15.58 7 14.41V16C7 18.21 8.79 20 11 20H13C15.21 20 17 18.21 17 16V14.41H19ZM4 11C4 11 2 11 2 14C2 17 4 17 4 17C4 17 6 17 6 14C6 11 4 11 4 11ZM20 11C20 11 18 11 18 14C18 17 20 17 20 17C20 17 22 17 22 14C22 11 20 11 20 11Z"/>
+      </svg>
+      <h1>Vet<span>Agenda</span></h1>
+    </div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="seu@email.com">
+        <span class="error-msg" id="emailError">Por favor, insira um e-mail válido.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="••••••••">
+        <span class="error-msg" id="passwordError">A senha é obrigatória.</span>
+      </div>
+
+      <button type="submit" class="btn-primary">Entrar no Sistema</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault(); // Impede o envio real do formulário
+      
+      let isValid = true;
+
+      // Reseta os estados de erro
+      emailInput.classList.remove('error');
+      passwordInput.classList.remove('error');
+      emailError.style.display = 'none';
+      passwordError.style.display = 'none';
+
+      // Validação simples de e-mail (verifica se tem conteúdo e um '@')
+      if (emailInput.value.trim() === '' || !emailInput.value.includes('@')) {
+        emailInput.classList.add('error');
+        emailError.style.display = 'block';
+        isValid = false;
+      }
+
+      // Validação simples de senha (verifica se não está vazia)
+      if (passwordInput.value.trim() === '') {
+        passwordInput.classList.add('error');
+        passwordError.style.display = 'block';
+        isValid = false;
+      }
+
+      // Se passou na validação, simula o sucesso
+      if (isValid) {
+        // Reduzindo o tempo de espera visual apenas para dar um feedback instantâneo (semelhante ao que fazemos em VSLs)
+        setTimeout(() => {
+          alert('Login simulado com sucesso! Redirecionando para o painel...');
+          form.reset();
+        }, 300);
+      }
+    });
+  </script>
+</body>
+</html>
