@@ -295,7 +295,19 @@ document.addEventListener("DOMContentLoaded", () => {
     addRecordForm: document.getElementById("addRecordForm"),
     recordType: document.getElementById("recordType"),
     recordTitle: document.getElementById("recordTitle"),
-    recordDesc: document.getElementById("recordDesc")
+    recordDesc: document.getElementById("recordDesc"),
+
+    // Cadastro de Pet
+    btnNewPet: document.getElementById("btnNewPet"),
+    newPetFormCard: document.getElementById("newPetFormCard"),
+    addPetForm: document.getElementById("addPetForm"),
+    btnCancelAddPet: document.getElementById("btnCancelAddPet"),
+    petFormName: document.getElementById("petFormName"),
+    petFormSpecies: document.getElementById("petFormSpecies"),
+    petFormBreed: document.getElementById("petFormBreed"),
+    petFormAge: document.getElementById("petFormAge"),
+    petFormWeight: document.getElementById("petFormWeight"),
+    petFormTutor: document.getElementById("petFormTutor")
   };
 
   // --- CONTROLE DE ROTAS SPA ---
@@ -660,49 +672,45 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Adiciona ouvintes para ações de agendamento na tabela
-    attachTableActionListeners(tbody);
-  }
+    }
 
-  function attachTableActionListeners(container) {
-    container.addEventListener("click", (e) => {
-      const btn = e.target.closest(".btn-action");
-      if (!btn) return;
+  function handleTableActionClick(e) {
+    const btn = e.target.closest(".btn-action");
+    if (!btn) return;
 
-      const id = btn.getAttribute("data-id");
-      
-      if (btn.classList.contains("confirm")) {
-        AppStore.updateAppointmentStatus(id, "Confirmado");
+    e.preventDefault();
+    e.stopPropagation();
+
+    const id = btn.getAttribute("data-id");
+    const role = AppStore.currentUser.role;
+    
+    if (btn.classList.contains("confirm")) {
+      AppStore.updateAppointmentStatus(id, "Confirmado");
+      renderPanel();
+      if (role === 'vet') renderAgenda();
+    } else if (btn.classList.contains("cancel")) {
+      if (confirm("Tem certeza que deseja cancelar esta consulta?")) {
+        AppStore.updateAppointmentStatus(id, "Cancelado");
         renderPanel();
-        renderAgenda();
-      } else if (btn.classList.contains("cancel")) {
-        if (confirm("Tem certeza que deseja cancelar esta consulta?")) {
-          AppStore.updateAppointmentStatus(id, "Cancelado");
+        if (role === 'vet') renderAgenda();
+      }
+    } else if (btn.classList.contains("complete")) {
+      const apt = AppStore.db.appointments.find(a => a.id === id);
+      if (apt) {
+        AppStore.updateAppointmentStatus(id, "Concluído");
+        if (confirm("Consulta concluída! Deseja registrar a ficha médica/prontuário do paciente agora?")) {
+          navigateTo("patients");
+          selectPatientById(apt.petId);
+          els.recordTitle.value = `Atendimento - ${apt.specialty}`;
+          els.recordDesc.value = `Consulta de ${apt.specialty} realizada pelo ${apt.vetName} em ${new Date().toLocaleDateString('pt-BR')}. Notas clínicas: `;
+          els.recordType.value = "Consulta";
+          els.recordDesc.focus();
+        } else {
           renderPanel();
-          renderAgenda();
-        }
-      } else if (btn.classList.contains("complete")) {
-        // Finaliza a consulta e redireciona o veterinário para o prontuário para adicionar notas de atendimento!
-        const apt = AppStore.db.appointments.find(a => a.id === id);
-        if (apt) {
-          AppStore.updateAppointmentStatus(id, "Concluído");
-          if (confirm("Consulta concluída! Deseja registrar a ficha médica/prontuário do paciente agora?")) {
-            // Navega para o prontuário do pet correspondente
-            navigateTo("patients");
-            // Abre o pet no painel de pacientes
-            selectPatientById(apt.petId);
-            // Foca no formulário de preenchimento de prontuário
-            els.recordTitle.value = `Atendimento - ${apt.specialty}`;
-            els.recordDesc.value = `Consulta de ${apt.specialty} realizada pelo ${apt.vetName} em ${new Date().toLocaleDateString('pt-BR')}. Notas clínicas: `;
-            els.recordType.value = "Consulta";
-            els.recordDesc.focus();
-          } else {
-            renderPanel();
-            renderAgenda();
-          }
+          if (role === 'vet') renderAgenda();
         }
       }
-    });
+    }
   }
 
 
@@ -796,8 +804,6 @@ document.addEventListener("DOMContentLoaded", () => {
         els.agendaTableBody.appendChild(tr);
       });
     }
-
-    attachTableActionListeners(els.agendaTableBody);
 
     // Renderizar Calendário Compacto Lateral
     renderMiniCalendar();
@@ -1379,6 +1385,94 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (els.sidebarOverlay) {
     els.sidebarOverlay.addEventListener("click", toggleMenu);
+  }
+
+  // --- CADASTRO DE NOVO PET ---
+  if (els.btnNewPet) {
+    els.btnNewPet.addEventListener("click", () => {
+      // Oculta fichas e exibe formulário de cadastro
+      els.patientDetailPlaceholder.classList.add("hidden");
+      els.patientDetailCard.classList.add("hidden");
+      els.newPetFormCard.classList.remove("hidden");
+
+      // Preenche o tutor se logado como tutor
+      if (AppStore.currentUser.role === 'tutor') {
+        els.petFormTutor.value = AppStore.currentUser.name;
+        els.petFormTutor.setAttribute("disabled", "true");
+      } else {
+        els.petFormTutor.value = '';
+        els.petFormTutor.removeAttribute("disabled");
+      }
+      els.petFormName.focus();
+    });
+  }
+
+  if (els.btnCancelAddPet) {
+    els.btnCancelAddPet.addEventListener("click", () => {
+      els.newPetFormCard.classList.add("hidden");
+      if (selectedPatientId) {
+        els.patientDetailCard.classList.remove("hidden");
+      } else {
+        els.patientDetailPlaceholder.classList.remove("hidden");
+      }
+    });
+  }
+
+  if (els.addPetForm) {
+    els.addPetForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const name = els.petFormName.value.trim();
+      const speciesVal = els.petFormSpecies.value;
+      const breed = els.petFormBreed.value.trim();
+      const age = els.petFormAge.value.trim();
+      const weight = els.petFormWeight.value.trim();
+      // Se estiver desabilitado (tutor), pega o valor do store ou do campo
+      const tutor = AppStore.currentUser.role === 'tutor' ? AppStore.currentUser.name : els.petFormTutor.value.trim();
+
+      if (!name || !breed || !age || !weight || !tutor) {
+        alert("Por favor, preencha todos os campos para cadastrar o pet.");
+        return;
+      }
+
+      const speciesName = speciesVal === 'cat' ? 'Gato' : (speciesVal === 'dog' ? 'Cachorro' : 'Outro');
+
+      const newPet = {
+        id: `pet-${Date.now()}`,
+        name: name,
+        species: speciesName,
+        breed: breed,
+        age: age,
+        weight: weight,
+        tutor: tutor,
+        type: speciesVal
+      };
+
+      // Adiciona ao banco de dados mockado
+      AppStore.db.pets.push(newPet);
+      AppStore.save();
+
+      // Reseta formulário
+      els.addPetForm.reset();
+      els.newPetFormCard.classList.add("hidden");
+
+      // Recarrega lista de pacientes
+      selectedPatientId = newPet.id;
+      renderPatients();
+
+      alert(`${name} cadastrado com sucesso!`);
+    });
+  }
+
+  // --- ENLACE ÚNICO DE EVENTOS DE BOTÃO DE AÇÃO DA TABELA (EVENT DELEGATION) ---
+  if (els.panelRecentAppointments) {
+    const tbody = els.panelRecentAppointments.querySelector("tbody");
+    if (tbody) {
+      tbody.addEventListener("click", handleTableActionClick);
+    }
+  }
+  if (els.agendaTableBody) {
+    els.agendaTableBody.addEventListener("click", handleTableActionClick);
   }
 
   // --- INICIALIZAÇÃO DA APLICAÇÃO ---

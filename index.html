@@ -392,6 +392,11 @@
               <i data-lucide="search" size="18"></i>
               <input type="text" id="patientSearchInput" placeholder="Buscar paciente ou raça..." />
             </div>
+            
+            <button id="btnNewPet" class="btn-new" style="width: 100%; margin-top: 10px; justify-content: center; gap: 8px;">
+              <i data-lucide="plus" size="18"></i> Cadastrar Pet
+            </button>
+
             <div class="patients-list" id="patientsListGroup">
               <!-- Pacientes via JS -->
             </div>
@@ -404,6 +409,61 @@
               <i data-lucide="dog" size="64"></i>
               <h3>Nenhum Paciente Selecionado</h3>
               <p>Selecione um animal de estimação na lista lateral para visualizar suas informações clínicas detalhadas, alergias e linha do tempo de consultas.</p>
+            </div>
+
+            <!-- Formulário de Cadastro de Novo Pet -->
+            <div id="newPetFormCard" class="vet-record-form-card hidden">
+              <h3>Cadastrar Novo Pet</h3>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">
+                Insira as informações básicas do pet para registrá-lo no sistema.
+              </p>
+              <form id="addPetForm">
+                <div class="form-group-row">
+                  <div class="form-group">
+                    <label for="petFormName">Nome do Pet</label>
+                    <input type="text" id="petFormName" placeholder="Ex: Pipoca" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="petFormSpecies">Espécie</label>
+                    <select id="petFormSpecies" required>
+                      <option value="dog">Cachorro</option>
+                      <option value="cat">Gato</option>
+                      <option value="other">Outro</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group-row" style="margin-top: 1rem;">
+                  <div class="form-group">
+                    <label for="petFormBreed">Raça</label>
+                    <input type="text" id="petFormBreed" placeholder="Ex: Poodle, Siamês" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="petFormAge">Idade</label>
+                    <input type="text" id="petFormAge" placeholder="Ex: 2 anos, 6 meses" required>
+                  </div>
+                </div>
+
+                <div class="form-group-row" style="margin-top: 1rem;">
+                  <div class="form-group">
+                    <label for="petFormWeight">Peso</label>
+                    <input type="text" id="petFormWeight" placeholder="Ex: 8.5kg" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="petFormTutor">Tutor Responsável</label>
+                    <input type="text" id="petFormTutor" placeholder="Ex: Carlos Mendes" required>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                  <button type="submit" class="btn-save-record">
+                    <i data-lucide="save"></i> Salvar Pet
+                  </button>
+                  <button type="button" id="btnCancelAddPet" class="btn-confirm-sub" style="width: auto; padding: 0.7rem 1.25rem; margin-top: 0;">
+                    Cancelar
+                  </button>
+                </div>
+              </form>
             </div>
 
             <!-- Ficha clínica -->
