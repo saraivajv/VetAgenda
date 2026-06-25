@@ -1113,3 +1113,572 @@
     padding: 2rem 1.25rem;
   }
 }
+/* ==========================================================================
+   MELHORIAS: TOASTS, MODAL DE CONFIRMAÇÃO, TEMA ESCURO, CHIP DE ALERGIA
+   ========================================================================== */
+
+/* --- Botão de alternância de tema --- */
+.btn-theme-toggle {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-theme-toggle:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.btn-theme-toggle i, .btn-theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* --- Chip de alergia em destaque (perigo) --- */
+.info-chip.danger-chip {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+}
+.info-chip.danger-chip strong {
+  color: #ef4444;
+}
+
+/* --- Notificações Toast --- */
+.toast-container {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 360px;
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--text-muted);
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-main);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateX(120%);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+.toast i, .toast svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.toast-success { border-left-color: var(--success); }
+.toast-success i, .toast-success svg { color: var(--success); }
+.toast-error { border-left-color: #ef4444; }
+.toast-error i, .toast-error svg { color: #ef4444; }
+.toast-warning { border-left-color: #f59e0b; }
+.toast-warning i, .toast-warning svg { color: #f59e0b; }
+.toast-info { border-left-color: var(--primary); }
+.toast-info i, .toast-info svg { color: var(--primary); }
+
+/* --- Modal de confirmação --- */
+.confirm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.confirm-modal-overlay.show {
+  opacity: 1;
+}
+.confirm-modal {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+  transform: scale(0.92);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.confirm-modal-overlay.show .confirm-modal {
+  transform: scale(1);
+}
+.confirm-modal-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #e0f2fe;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+.confirm-modal-icon.danger {
+  background: #fee2e2;
+  color: #ef4444;
+}
+.confirm-modal-icon i, .confirm-modal-icon svg {
+  width: 28px;
+  height: 28px;
+}
+.confirm-modal h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-main);
+}
+.confirm-modal p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+.confirm-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+.confirm-modal-actions button {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+.confirm-modal-cancel {
+  background: var(--bg-color);
+  color: var(--text-main);
+}
+.confirm-modal-cancel:hover {
+  background: var(--border-color);
+}
+.confirm-modal-ok {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.confirm-modal-ok:hover {
+  background: var(--primary-hover);
+}
+.confirm-modal-ok.danger {
+  background: #ef4444;
+  border-color: #ef4444;
+}
+.confirm-modal-ok.danger:hover {
+  background: #dc2626;
+}
+
+/* --- TEMA ESCURO --- */
+[data-theme="dark"] {
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+}
+[data-theme="dark"] .nav-links li a:hover,
+[data-theme="dark"] .nav-links li a.active {
+  background-color: rgba(14, 165, 233, 0.15);
+}
+[data-theme="dark"] .pet-avatar,
+[data-theme="dark"] .btn-action {
+  background-color: #0f172a;
+}
+[data-theme="dark"] .login-screen {
+  background: radial-gradient(circle at top right, #1e293b 0%, #0f172a 100%);
+}
+[data-theme="dark"] td::before {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .info-chip.danger-chip {
+  background-color: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+[data-theme="dark"] .confirm-modal-overlay {
+  background: rgba(0, 0, 0, 0.65);
+}
+@media (max-width: 768px) {
+  .toast-container {
+    left: 1rem;
+    right: 1rem;
+    max-width: none;
+  }
+}
+
+/* ==========================================================================
+   MELHORIAS v2: REAGENDAR, EXCLUIR PET, PRÓXIMA CONSULTA
+   ========================================================================== */
+
+/* Botão de ação extra (reagendar) */
+.btn-action.reschedule {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+.btn-action.reschedule:hover {
+  background-color: #d97706;
+  color: #fff;
+}
+
+/* Botão excluir pet na ficha */
+.patient-detail-header {
+  position: relative;
+}
+.btn-delete-pet {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-delete-pet:hover {
+  background: #ef4444;
+  color: #fff;
+  border-color: #ef4444;
+}
+.btn-delete-pet i, .btn-delete-pet svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Modal de reagendamento — alinhamentos próprios */
+.reschedule-modal {
+  max-width: 460px;
+}
+.reschedule-modal .form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+.reschedule-modal input[type="date"] {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-color);
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+.reschedule-modal .time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+/* Card de próxima consulta (Tutor) */
+.next-appointment-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: linear-gradient(120deg, var(--primary) 0%, #0284c7 100%);
+  color: #fff;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 25px -8px rgba(14, 165, 233, 0.5);
+}
+.next-appointment-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.next-appointment-icon i, .next-appointment-icon svg {
+  width: 28px;
+  height: 28px;
+}
+.next-appointment-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+.next-appointment-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.9;
+}
+.next-appointment-body strong {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.next-appointment-meta {
+  font-size: 0.85rem;
+  opacity: 0.95;
+  text-transform: capitalize;
+}
+.next-appointment-meta em {
+  font-style: normal;
+  font-weight: 600;
+}
+.next-appointment-cta {
+  background: #fff !important;
+  color: var(--primary) !important;
+  flex-shrink: 0;
+}
+.next-appointment-cta:hover {
+  background: #f0f9ff !important;
+}
+@media (max-width: 768px) {
+  .next-appointment-card {
+    flex-direction: column;
+    text-align: center;
+    align-items: stretch;
+  }
+  .next-appointment-icon {
+    align-self: center;
+  }
+  .next-appointment-cta {
+    justify-content: center;
+  }
+  .reschedule-modal .time-slots-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ==========================================================================
+   MELHORIAS v3: CARTEIRA DE VACINAÇÃO, GRÁFICO DE PESO, BACKUP
+   ========================================================================== */
+
+/* --- Ferramentas de backup na sidebar --- */
+.sidebar-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sidebar-tools-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  padding: 0 0.25rem;
+  margin-bottom: 2px;
+}
+.sidebar-tool-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.sidebar-tool-btn:hover {
+  background: var(--bg-color);
+  color: var(--primary);
+}
+.sidebar-tool-btn.danger:hover {
+  color: #ef4444;
+}
+.sidebar-tool-btn i, .sidebar-tool-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* --- Seções da ficha --- */
+.vaccine-section, .weight-section {
+  margin-bottom: 2rem;
+}
+.vaccine-section h3, .weight-section h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* --- Carteira de vacinação --- */
+.vaccine-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+.vaccine-card {
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--text-muted);
+  border-radius: 10px;
+  padding: 1rem;
+  background: var(--card-bg);
+}
+.vaccine-card.success { border-left-color: var(--success); }
+.vaccine-card.warning { border-left-color: #f59e0b; }
+.vaccine-card.danger { border-left-color: #ef4444; }
+.vaccine-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.75rem;
+}
+.vaccine-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.vaccine-status {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+.vaccine-status.success { background: #d1fae5; color: var(--success); }
+.vaccine-status.warning { background: #fef3c7; color: #d97706; }
+.vaccine-status.danger { background: #fee2e2; color: #ef4444; }
+.vaccine-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.vaccine-dates strong {
+  color: var(--text-main);
+}
+.vaccine-empty {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  padding: 1.25rem;
+  background: var(--bg-color);
+  border-radius: 10px;
+  border: 1px dashed var(--border-color);
+}
+.vaccine-empty i, .vaccine-empty svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* --- Gráfico de peso --- */
+.weight-chart-wrapper {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+.weight-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+.weight-summary strong {
+  color: var(--text-main);
+  font-size: 1.05rem;
+}
+.weight-trend {
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+.weight-trend.up { color: var(--success); }
+.weight-trend.down { color: #ef4444; }
+.weight-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.weight-area {
+  fill: rgba(14, 165, 233, 0.12);
+  stroke: none;
+}
+.weight-line {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.weight-dot {
+  fill: #fff;
+  stroke: var(--primary);
+  stroke-width: 2.5;
+}
+.weight-value {
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--text-main);
+}
+.weight-label {
+  font-size: 11px;
+  fill: var(--text-muted);
+}
+.weight-single {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+  padding: 1rem;
+}
+.weight-single strong {
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+.weight-single span, .weight-empty {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* --- Ajustes de tema escuro --- */
+[data-theme="dark"] .vaccine-status.success { background: rgba(16,185,129,0.15); }
+[data-theme="dark"] .vaccine-status.warning { background: rgba(245,158,11,0.15); }
+[data-theme="dark"] .vaccine-status.danger { background: rgba(239,68,68,0.15); }
+[data-theme="dark"] .weight-area { fill: rgba(14, 165, 233, 0.18); }
+[data-theme="dark"] .weight-dot { fill: var(--card-bg); }
