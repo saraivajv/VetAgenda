@@ -695,6 +695,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const links = els.navLinks.querySelectorAll("li");
     links.forEach(li => {
       const link = li.querySelector("a");
+      // Alguns itens do menu (ex: ferramentas de dados) não possuem link <a>
+      if (!link) return;
       const target = link.getAttribute("data-target");
 
       if (target === 'agenda' && role === 'tutor') {
